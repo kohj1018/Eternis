@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  notes     Note[]
+
+  @@map("users")
+}
+
+model Note {
+  id              String            @id @default(uuid())
+  userId          String            @map("user_id")
+  title           String
+  content         String            @db.Text
+  summary         String?           @db.Text
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tags            Tag[]
+  embedding       Embedding?
+  reviewSchedules ReviewSchedule[]
+
+  @@index([userId])
+  @@map("notes")
+}
+
+model Tag {
+  id     String @id @default(uuid())
+  noteId String @map("note_id")
+  name   String
+  note   Note   @relation(fields: [noteId], references: [id], onDelete: Cascade)
+
+  @@index([noteId])
+  @@index([name])
+  @@map("tags")
+}
+
+model Embedding {
+  id     String  @id @default(uuid())
+  noteId String  @unique @map("note_id")
+  vector Float[]
+  note   Note    @relation(fields: [noteId], references: [id], onDelete: Cascade)
+
+  @@map("embeddings")
+}
+
+model ReviewSchedule {
+  id             String    @id @default(uuid())
+  noteId         String    @map("note_id")
+  nextReviewDate DateTime  @map("next_review_date")
+  stage          Int       @default(1)
+  completed      Boolean   @default(false)
+  completedAt    DateTime? @map("completed_at")
+  note           Note      @relation(fields: [noteId], references: [id], onDelete: Cascade)
+
+  @@index([noteId])
+  @@index([nextReviewDate])
+  @@map("review_schedules")
+}
