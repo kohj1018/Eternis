@@ -1,5 +1,6 @@
 "use client";
 
+import Navigation from "@/components/Navigation";
 import { useAuth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -58,20 +59,7 @@ export default function NotesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <a href="/" className="text-2xl font-bold">
-            Eternis
-          </a>
-          <button
-            type="button"
-            onClick={() => router.push("/notes/new")}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          >
-            + 새 노트
-          </button>
-        </div>
-      </nav>
+      <Navigation />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8">내 노트</h1>
         {notes.length === 0 ? (

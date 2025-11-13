@@ -1,5 +1,7 @@
 "use client";
 
+import Editor from "@/components/Editor";
+import Navigation from "@/components/Navigation";
 import { useAuth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -30,49 +32,40 @@ export default function NewNotePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <a href="/notes" className="text-2xl font-bold">
-            Eternis
-          </a>
-        </div>
-      </nav>
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
+      <Navigation />
+      <div className="max-w-5xl mx-auto py-8">
+        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm">
+          <div className="border-b px-8 py-6">
             <input
               type="text"
-              placeholder="제목"
+              placeholder="제목 없음"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
-              className="w-full text-3xl font-bold border-0 outline-none"
+              className="w-full text-4xl font-bold border-0 outline-none placeholder-gray-300"
             />
           </div>
-          <div>
-            <textarea
-              placeholder="내용을 입력하세요..."
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              required
-              rows={20}
-              className="w-full border border-gray-300 rounded-lg p-4 outline-none focus:border-blue-500"
+          <div className="min-h-[500px]">
+            <Editor
+              content={content}
+              onChange={setContent}
+              placeholder="'/'를 입력하여 명령어를 확인하세요..."
             />
           </div>
-          <div className="flex gap-4">
-            <button
-              type="submit"
-              disabled={saving}
-              className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50"
-            >
-              {saving ? "저장 중..." : "저장"}
-            </button>
+          <div className="border-t px-8 py-4 flex gap-3 justify-end">
             <button
               type="button"
               onClick={() => router.back()}
-              className="px-6 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300"
+              className="px-5 py-2 text-gray-700 font-medium rounded-lg hover:bg-gray-100"
             >
               취소
+            </button>
+            <button
+              type="submit"
+              disabled={saving}
+              className="px-5 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            >
+              {saving ? "저장 중..." : "저장"}
             </button>
           </div>
         </form>
