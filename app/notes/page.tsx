@@ -1,7 +1,9 @@
 "use client";
 
 import Navigation from "@/components/Navigation";
+import { SkeletonCard } from "@/components/SkeletonCard";
 import { useAuth } from "@/lib/auth";
+import { useDelayedLoading } from "@/lib/useDelayedLoading";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -19,6 +21,7 @@ export default function NotesPage() {
   const router = useRouter();
   const [notes, setNotes] = useState<Note[]>([]);
   const [fetching, setFetching] = useState(false);
+  const showSkeleton = useDelayedLoading(loading || fetching);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -49,48 +52,69 @@ export default function NotesPage() {
     }
   };
 
-  if (loading || fetching) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>로딩 중...</p>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-hero-gradient">
       <Navigation />
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">내 노트</h1>
-        {notes.length === 0 ? (
-          <div className="text-center py-16 text-gray-500">
+      <div className="mx-auto max-w-6xl px-6 py-12 text-white">
+        <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.4em] text-white/60">Library</p>
+            <h1 className="mt-2 text-4xl font-semibold text-white">내 노트</h1>
+            <p className="mt-2 text-sm text-white/70">
+              {notes.length === 0 ? "새로운 아이디어를 기록해보세요." : `총 ${notes.length}개의 노트`}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => router.push("/notes/new")}
+            className="inline-flex items-center gap-2 rounded-full border border-white/30 px-5 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
+          >
+            + 새 노트 작성
+          </button>
+        </div>
+
+        {showSkeleton ? (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {[...Array(6)].map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+        ) : notes.length === 0 ? (
+          <div className="rounded-3xl border border-dashed border-white/20 bg-white/5 py-20 text-center text-white/70">
             아직 노트가 없습니다. 새 노트를 작성해보세요!
           </div>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {notes.map((note) => (
               <button
                 type="button"
                 key={note.id}
                 onClick={() => router.push(`/notes/${note.id}`)}
-                className="bg-white p-6 rounded-lg shadow hover:shadow-md cursor-pointer transition text-left"
+                className="card-spotlight text-left"
               >
-                <h3 className="font-bold text-lg mb-2">{note.title}</h3>
-                <p className="text-gray-600 text-sm line-clamp-3 mb-3">
-                  {note.summary || note.content}
-                </p>
-                {note.tags && note.tags.length > 0 && (
-                  <div className="flex gap-2 flex-wrap">
-                    {note.tags.map((tag) => (
-                      <span
-                        key={tag.id}
-                        className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded"
-                      >
-                        {tag.name}
+                <div className="h-full overflow-hidden rounded-3xl border border-slate-100 bg-white p-6 text-slate-900 shadow-[0_25px_60px_rgba(15,23,42,0.08)] transition hover:-translate-y-1">
+                  <div className="flex items-start justify-between">
+                    <h3 className="text-lg font-semibold text-slate-900">{note.title}</h3>
+                    {note.createdAt && (
+                      <span className="text-xs text-slate-400">
+                        {new Date(note.createdAt).toLocaleDateString()}
                       </span>
-                    ))}
+                    )}
                   </div>
-                )}
+                  <p className="mt-3 text-sm text-slate-600 line-clamp-4">{note.summary || note.content}</p>
+                  {note.tags && note.tags.length > 0 && (
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {note.tags.map((tag) => (
+                        <span
+                          key={tag.id}
+                          className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600"
+                        >
+                          #{tag.name}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </button>
             ))}
           </div>

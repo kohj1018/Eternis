@@ -31,39 +31,46 @@ export default function NewNotePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-hero-gradient">
       <Navigation />
-      <div className="max-w-5xl mx-auto py-8">
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm">
-          <div className="border-b px-8 py-6">
+      <div className="mx-auto max-w-6xl px-6 py-10">
+        <form
+          onSubmit={handleSubmit}
+          className="rounded-3xl border border-slate-100 bg-white shadow-[0_30px_80px_rgba(15,23,42,0.08)]"
+        >
+          <div className="border-b border-slate-100 px-8 py-6">
+            <label htmlFor="note-title" className="sr-only">
+              제목
+            </label>
             <input
+              id="note-title"
               type="text"
-              placeholder="제목 없음"
+              placeholder="제목을 입력하세요"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
-              className="w-full text-4xl font-bold border-0 outline-none placeholder-gray-300"
+              className="w-full border-0 bg-transparent text-4xl font-semibold text-slate-900 placeholder:text-slate-300 focus:outline-none"
             />
           </div>
-          <div className="min-h-[500px]">
+          <div className="px-2 pb-6 pt-4">
             <Editor
               content={content}
               onChange={setContent}
               placeholder="'/'를 입력하여 명령어를 확인하세요..."
             />
           </div>
-          <div className="border-t px-8 py-4 flex gap-3 justify-end">
+          <div className="flex justify-end gap-3 border-t border-slate-100 px-8 py-4">
             <button
               type="button"
               onClick={() => router.back()}
-              className="px-5 py-2 text-gray-700 font-medium rounded-lg hover:bg-gray-100"
+              className="rounded-full border border-slate-200 px-5 py-2 text-sm font-semibold text-slate-600 transition hover:border-slate-400 hover:bg-slate-50"
             >
               취소
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="px-5 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="rounded-full bg-slate-900 px-6 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {saving ? "저장 중..." : "저장"}
             </button>

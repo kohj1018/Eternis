@@ -1,6 +1,13 @@
 "use client";
 
+import { AuthButton } from "@/components/AuthButton";
 import { usePathname, useRouter } from "next/navigation";
+
+const navItems = [
+  { href: "/notes", label: "노트" },
+  { href: "/graph", label: "그래프" },
+  { href: "/review", label: "복습" },
+];
 
 export default function Navigation() {
   const router = useRouter();
@@ -11,52 +18,44 @@ export default function Navigation() {
   };
 
   return (
-    <nav className="bg-white border-b">
-      <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-        <a href="/notes" className="text-2xl font-bold">
-          Eternis
+    <header className="sticky top-0 z-30 border-b border-white/10 bg-surface/70 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
+        <a href="/" className="flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-lg font-semibold text-white shadow-soft">
+            E
+          </div>
+          <div>
+            <p className="text-lg font-semibold text-white">Eternis</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-white/80">Notes</p>
+          </div>
         </a>
-        <div className="flex gap-6 items-center">
-          <a
-            href="/notes"
-            className={`px-3 py-2 rounded-lg transition ${
-              isActive("/notes")
-                ? "text-blue-600 font-medium bg-blue-50"
-                : "text-gray-700 hover:text-blue-600"
-            }`}
-          >
-            노트
-          </a>
-          <a
-            href="/graph"
-            className={`px-3 py-2 rounded-lg transition ${
-              isActive("/graph")
-                ? "text-blue-600 font-medium bg-blue-50"
-                : "text-gray-700 hover:text-blue-600"
-            }`}
-          >
-            그래프
-          </a>
-          <a
-            href="/review"
-            className={`px-3 py-2 rounded-lg transition ${
-              isActive("/review")
-                ? "text-blue-600 font-medium bg-blue-50"
-                : "text-gray-700 hover:text-blue-600"
-            }`}
-          >
-            복습
-          </a>
+
+        <nav className="flex flex-1 items-center justify-end gap-2 text-sm font-medium text-slate-300">
+          {navItems.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className={`group flex items-center gap-2 rounded-full px-4 py-2 transition ${
+                isActive(item.href)
+                  ? "bg-white/20 text-white shadow-soft"
+                  : "text-white/70 hover:bg-white/10 hover:text-white"
+              }`}
+            >
+              <span>{item.label}</span>
+              {isActive(item.href) && <span className="h-1.5 w-1.5 rounded-full bg-brand"></span>}
+            </a>
+          ))}
           <button
             type="button"
             onClick={() => router.push("/notes/new")}
-            className="ml-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+            className="ml-2 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand via-brand-dark to-brand px-5 py-2 text-sm font-semibold text-white shadow-glow transition hover:translate-y-0.5"
           >
             + 새 노트
           </button>
-        </div>
+          <AuthButton />
+        </nav>
       </div>
-    </nav>
+    </header>
   );
 }
 

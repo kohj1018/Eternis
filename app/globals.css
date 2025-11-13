@@ -2,31 +2,99 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    color-scheme: light;
+    --background: #050816;
+    --foreground: #0f172a;
+    --panel: rgba(255, 255, 255, 0.08);
+    --card: #ffffff;
+    --muted: #64748b;
+    --accent: #6366f1;
+    --accent-strong: #4f46e5;
+    --glow: rgba(99, 102, 241, 0.45);
+    font-feature-settings:
+      "ss01" on,
+      "cv05" on,
+      "liga" on;
+  }
+
+  * {
+    font-kerning: normal;
+  }
+
+  body {
+    @apply min-h-screen bg-white text-slate-900;
+    background-color: var(--background);
+    background-image:
+      linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(2, 6, 23, 0.85)),
+      radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.25), transparent 45%),
+      radial-gradient(circle at 80% 0%, rgba(139, 92, 246, 0.2), transparent 40%);
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    background: rgba(99, 102, 241, 0.25);
+    color: #1e1b4b;
+  }
+
+  img {
+    @apply select-none;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply border border-white/10 bg-white/60 backdrop-blur-xl shadow-card;
+  }
+
+  .card-spotlight {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-spotlight::before {
+    content: "";
+    position: absolute;
+    inset: auto auto -40% -40%;
+    width: 120%;
+    height: 120%;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.25), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .card-spotlight:hover::before {
+    opacity: 1;
+  }
+}
+
 /* Tiptap Editor Styles */
 .ProseMirror {
-  @apply focus:outline-none;
+  @apply focus:outline-none leading-relaxed text-slate-800;
 }
 
 .ProseMirror p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
-  @apply text-gray-400 float-left h-0 pointer-events-none;
+  @apply text-slate-400 float-left h-0 pointer-events-none;
 }
 
 .ProseMirror h1 {
-  @apply text-4xl font-bold mt-6 mb-4;
+  @apply text-4xl font-bold mt-6 mb-4 text-slate-900;
 }
 
 .ProseMirror h2 {
-  @apply text-3xl font-bold mt-5 mb-3;
+  @apply text-3xl font-semibold mt-5 mb-3 text-slate-900;
 }
 
 .ProseMirror h3 {
-  @apply text-2xl font-bold mt-4 mb-2;
+  @apply text-2xl font-semibold mt-4 mb-2 text-slate-900;
 }
 
 .ProseMirror ul,
 .ProseMirror ol {
-  @apply pl-6 my-4;
+  @apply pl-6 my-4 space-y-1;
 }
 
 .ProseMirror ul {
@@ -37,32 +105,28 @@
   @apply list-decimal;
 }
 
-.ProseMirror li {
-  @apply my-1;
-}
-
 .ProseMirror code {
-  @apply bg-gray-100 text-red-600 px-1.5 py-0.5 rounded text-sm font-mono;
+  @apply bg-slate-900/90 text-rose-200 px-1.5 py-0.5 rounded-md text-sm font-mono;
 }
 
 .ProseMirror pre {
-  @apply bg-gray-900 text-gray-100 rounded-lg p-4 my-4 overflow-x-auto;
+  @apply bg-slate-950 text-slate-100 rounded-2xl p-5 my-5 overflow-x-auto border border-white/10 shadow-glow;
 }
 
 .ProseMirror pre code {
-  @apply bg-transparent text-gray-100 p-0;
+  @apply bg-transparent text-slate-100 p-0;
 }
 
 .ProseMirror blockquote {
-  @apply border-l-4 border-gray-300 pl-4 py-2 my-4 text-gray-700 italic;
+  @apply border-l-4 border-brand/40 pl-4 py-2 my-5 text-slate-700 italic bg-brand-soft/40 rounded-r-xl;
 }
 
 .ProseMirror ul[data-type="taskList"] {
-  @apply list-none pl-0;
+  @apply list-none pl-0 space-y-2;
 }
 
 .ProseMirror ul[data-type="taskList"] li {
-  @apply flex items-start gap-2;
+  @apply flex items-start gap-3;
 }
 
 .ProseMirror ul[data-type="taskList"] li > label {
@@ -74,5 +138,5 @@
 }
 
 .ProseMirror ul[data-type="taskList"] input[type="checkbox"] {
-  @apply w-4 h-4 cursor-pointer;
+  @apply w-4 h-4 cursor-pointer accent-brand;
 }

@@ -202,11 +202,11 @@ export default function Editor({ content, onChange, placeholder }: EditorProps) 
   }
 
   return (
-    <div className="relative">
+    <div className="relative rounded-3xl border border-slate-100 bg-white shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
       {/* 슬래시 명령어 메뉴 */}
       {showMenu && (
         <div
-          className="fixed z-50 bg-white border rounded-lg shadow-xl p-2 w-72"
+          className="fixed z-50 w-80 rounded-2xl border border-slate-200 bg-white p-3 shadow-lg"
           style={{ 
             left: `${menuPosition.x}px`, 
             top: `${menuPosition.y}px`,
@@ -239,29 +239,31 @@ export default function Editor({ content, onChange, placeholder }: EditorProps) 
                 editor?.commands.focus();
               }
             }}
-            className="w-full px-3 py-2 border rounded mb-2 text-sm focus:outline-none focus:border-blue-500"
+            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             autoFocus
           />
-          <div className="max-h-80 overflow-y-auto">
+          <div className="max-h-80 overflow-y-auto pr-1">
             {filteredCommands.length > 0 ? (
               filteredCommands.map((cmd, index) => (
                 <button
                   key={index}
                   type="button"
                   onClick={() => cmd.command()}
-                  className={`w-full text-left px-3 py-2 rounded flex items-center gap-3 transition ${
+                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition ${
                     index === selectedIndex
-                      ? "bg-blue-100 text-blue-900"
-                      : "hover:bg-blue-50"
+                      ? "bg-brand-soft text-brand-dark"
+                      : "hover:bg-slate-100"
                   }`}
                   onMouseEnter={() => setSelectedIndex(index)}
                 >
-                  <span className="text-lg font-mono w-8 text-gray-600">{cmd.icon}</span>
-                  <span className="text-sm font-medium">{cmd.title}</span>
+                  <span className="w-8 text-lg font-mono text-slate-500">{cmd.icon}</span>
+                  <div>
+                    <span className="text-sm font-semibold text-slate-800">{cmd.title}</span>
+                  </div>
                 </button>
               ))
             ) : (
-              <div className="px-3 py-4 text-sm text-gray-500 text-center">
+              <div className="px-3 py-4 text-center text-sm text-slate-500">
                 검색 결과가 없습니다
               </div>
             )}
@@ -270,53 +272,79 @@ export default function Editor({ content, onChange, placeholder }: EditorProps) 
       )}
 
       {/* 툴바 - 텍스트 포맷 버튼 */}
-      <div className="sticky top-0 bg-white border-b px-4 py-2 flex gap-2 z-10">
+      <div className="sticky top-0 z-10 flex flex-wrap items-center gap-2 border-b border-slate-100 bg-white px-6 py-3">
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleBold().run()}
-          className={`px-3 py-1.5 rounded hover:bg-gray-100 ${editor.isActive("bold") ? "bg-gray-200 font-bold" : ""}`}
+          className={`rounded-full border px-3 py-1.5 text-sm font-semibold transition ${
+            editor.isActive("bold")
+              ? "border-brand bg-brand-soft text-brand-dark"
+              : "border-slate-200 text-slate-600 hover:border-brand/60 hover:text-slate-900"
+          }`}
         >
           <strong>B</strong>
         </button>
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={`px-3 py-1.5 rounded hover:bg-gray-100 ${editor.isActive("italic") ? "bg-gray-200" : ""}`}
+          className={`rounded-full border px-3 py-1.5 text-sm italic transition ${
+            editor.isActive("italic")
+              ? "border-brand bg-brand-soft text-brand-dark"
+              : "border-slate-200 text-slate-600 hover:border-brand/60 hover:text-slate-900"
+          }`}
         >
           <em>I</em>
         </button>
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleCode().run()}
-          className={`px-3 py-1.5 rounded hover:bg-gray-100 font-mono text-sm ${editor.isActive("code") ? "bg-gray-200" : ""}`}
+          className={`rounded-full border px-3 py-1.5 font-mono text-sm transition ${
+            editor.isActive("code")
+              ? "border-brand bg-brand-soft text-brand-dark"
+              : "border-slate-200 text-slate-600 hover:border-brand/60 hover:text-slate-900"
+          }`}
         >
           {"<>"}
         </button>
-        <div className="w-px bg-gray-300 mx-2" />
+        <div className="mx-2 h-6 w-px bg-slate-200" />
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={`px-3 py-1.5 rounded hover:bg-gray-100 ${editor.isActive("bulletList") ? "bg-gray-200" : ""}`}
+          className={`rounded-full border px-3 py-1.5 text-sm transition ${
+            editor.isActive("bulletList")
+              ? "border-brand bg-brand-soft text-brand-dark"
+              : "border-slate-200 text-slate-600 hover:border-brand/60 hover:text-slate-900"
+          }`}
         >
           • 목록
         </button>
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={`px-3 py-1.5 rounded hover:bg-gray-100 ${editor.isActive("orderedList") ? "bg-gray-200" : ""}`}
+          className={`rounded-full border px-3 py-1.5 text-sm transition ${
+            editor.isActive("orderedList")
+              ? "border-brand bg-brand-soft text-brand-dark"
+              : "border-slate-200 text-slate-600 hover:border-brand/60 hover:text-slate-900"
+          }`}
         >
           1. 목록
         </button>
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleTaskList().run()}
-          className={`px-3 py-1.5 rounded hover:bg-gray-100 ${editor.isActive("taskList") ? "bg-gray-200" : ""}`}
+          className={`rounded-full border px-3 py-1.5 text-sm transition ${
+            editor.isActive("taskList")
+              ? "border-brand bg-brand-soft text-brand-dark"
+              : "border-slate-200 text-slate-600 hover:border-brand/60 hover:text-slate-900"
+          }`}
         >
           ☑ 체크
         </button>
       </div>
 
-      <EditorContent editor={editor} />
+      <div className="px-6 pb-8">
+        <EditorContent editor={editor} />
+      </div>
 
       {/* 배경 클릭 시 메뉴 닫기 */}
       {showMenu && (
